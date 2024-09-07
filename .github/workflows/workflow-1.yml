@@ -4,7 +4,10 @@ on:
   push:
     branches: ["main"]
   pull_request:
+    paths-ignore:
+      - "README.md"
     branches: ["main"]
+
   workflow_dispatch:
     inputs:
       image_name:
@@ -20,7 +23,7 @@ on:
         required: false
         default: ""
 
-env: # Déclaration globale des variables d'environnement pour tous les jobs
+env:
   COMMIT_HASH: ${{ github.sha }}
   IMAGE_NAME: ${{ github.event.inputs.image_name || vars.IMAGE_NAME }}
   IMAGE_TAG: ${{ github.event.inputs.image_tag || 'latest' }}
