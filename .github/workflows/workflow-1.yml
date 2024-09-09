@@ -64,7 +64,8 @@ jobs:
           docker ps | grep test_container
 
           # Checks to validate the container
-          sleep 10
+          sleep 20
+          docker logs test_container
           curl http://localhost:3001
 
           docker stop test_container
