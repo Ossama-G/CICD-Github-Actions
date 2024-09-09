@@ -60,10 +60,11 @@ jobs:
       - name: Test Docker Image
         run: |
           echo "Running tests on Docker image: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}"
-          docker run -d --name test_container ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
+          docker run -d --name test_container -p 3001:3001 ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
           docker ps | grep test_container
 
           # Checks to validate the container
+          sleep 10
           curl http://localhost:3001
 
           docker stop test_container
@@ -104,4 +105,4 @@ jobs:
             sudo docker stop NodeJs-Container || true
             sudo docker rm NodeJs-Container || true
 
-            sudo docker run -d --name NodeJs-Container --restart always -p 3001:3000 ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            sudo docker run -d --name NodeJs-Container --restart always -p 3001:3001 ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
