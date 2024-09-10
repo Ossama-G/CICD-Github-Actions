@@ -1,5 +1,5 @@
 {
-  "name": "cicd-github-actions",
+  "name": "@ossama-g/cicd-github-actions",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
