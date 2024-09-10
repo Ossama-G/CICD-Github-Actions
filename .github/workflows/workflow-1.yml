@@ -87,16 +87,21 @@ jobs:
 
       - name: Push Docker Image to Container Registry
         run: |
-          echo "Pushing Docker image: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}"
+          DOCKERHUB_IMAGE=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
+          GHCR_IMAGE=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.IMAGE_NAME }}
+
+          echo "Pushing Docker image: $DOCKERHUB_IMAGE:${{ env.COMMIT_HASH }}"
 
           # Push the Docker image with commit hash tag
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
+          docker push $DOCKERHUB_IMAGE:${{ env.COMMIT_HASH }}
 
           # Build and push with specified or default tag
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker build -t $DOCKERHUB_IMAGE:${{ env.IMAGE_TAG }} .
+          docker push $DOCKERHUB_IMAGE:${{ env.IMAGE_TAG }}
 
-          docker push ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
+          # Build and Push the Docker image to GitHub Container Registry
+          docker build -t GHCR_IMAGE:${{ env.COMMIT_HASH }} .
+          docker push GHCR_IMAGE:${{ env.COMMIT_HASH }}
 
   deploy-on-EC2-instance:
     runs-on: ubuntu-latest
