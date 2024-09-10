@@ -31,7 +31,9 @@ env:
 jobs:
   build-test-and-push:
     permissions:
+      contents: read
       packages: write
+      id-token: write
     runs-on: ubuntu-latest
 
     steps:
@@ -91,7 +93,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-          ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
+          docker push ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
 
   deploy-on-EC2-instance:
     runs-on: ubuntu-latest
