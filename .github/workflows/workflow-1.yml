@@ -100,8 +100,8 @@ jobs:
           docker push $DOCKERHUB_IMAGE:${{ env.IMAGE_TAG }}
 
           # Build and Push the Docker image to GitHub Container Registry
-          docker build -t GHCR_IMAGE:${{ env.COMMIT_HASH }} .
-          docker push GHCR_IMAGE:${{ env.COMMIT_HASH }}
+          docker build -t $GHCR_IMAGE:${{ env.COMMIT_HASH }} .
+          docker push $GHCR_IMAGE:${{ env.COMMIT_HASH }}
 
   deploy-on-EC2-instance:
     runs-on: ubuntu-latest
