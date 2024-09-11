@@ -103,6 +103,28 @@ jobs:
           docker build -t $GHCR_IMAGE:${{ env.COMMIT_HASH }} .
           docker push $GHCR_IMAGE:${{ env.COMMIT_HASH }}
 
+  dev-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
+
+      - name: Set Kubeconfig
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Fetch Kubernetes Cluster Details
+        run: |
+          kubectl version --short
+          kubectl get nodes
+
   deploy-on-EC2-instance:
     runs-on: ubuntu-latest
     needs: build-test-and-push
