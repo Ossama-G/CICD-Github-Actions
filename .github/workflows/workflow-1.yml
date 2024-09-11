@@ -104,6 +104,7 @@ jobs:
           docker push $GHCR_IMAGE:${{ env.COMMIT_HASH }}
 
   dev-deploy:
+    needs: build-test-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
