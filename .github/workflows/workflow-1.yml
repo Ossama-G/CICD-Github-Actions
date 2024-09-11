@@ -123,7 +123,7 @@ jobs:
 
       - name: Fetch Kubernetes Cluster Details
         run: |
-          kubectl version --short
+          kubectl version
           kubectl get nodes
 
   deploy-on-EC2-instance:
