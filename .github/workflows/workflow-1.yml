@@ -106,6 +106,7 @@ jobs:
   dev-deploy:
     needs: build-test-and-push
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -115,11 +116,21 @@ jobs:
         with:
           version: "latest"
 
+      - name: Recreate client certificate
+        run: echo "${{ secrets.MINIKUBE_CLIENT_CRT }}" | base64 -d > /tmp/client.crt
+
+      - name: Recreate client key
+        run: echo "${{ secrets.MINIKUBE_CLIENT_KEY }}" | base64 -d > /tmp/client.key
+
+      - name: Recreate CA certificate
+        run: echo "${{ secrets.MINIKUBE_CA_CRT }}" | base64 -d > /tmp/ca.crt
+
       - name: Set Kubeconfig
-        uses: azure/k8s-set-context@v3
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+        run: |
+          kubectl config set-cluster minikube --server=https://192.168.49.2:8443 --certificate-authority=/tmp/ca.crt
+          kubectl config set-credentials minikube --client-certificate=/tmp/client.crt --client-key=/tmp/client.key
+          kubectl config set-context minikube --cluster=minikube --user=minikube
+          kubectl config use-context minikube
 
       - name: Fetch Kubernetes Cluster Details
         run: |
