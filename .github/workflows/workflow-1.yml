@@ -67,8 +67,6 @@ jobs:
       - name: Build Docker Image
         run: |
           echo "Building Docker image with name: ${{ env.IMAGE_NAME }} and tag: ${{ env.IMAGE_TAG }}"
-
-          # Build the Docker image with commit hash tag
           docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }} .
 
       - name: Test Docker Image
@@ -76,12 +74,9 @@ jobs:
           echo "Running tests on Docker image: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}"
           docker run -d --name test_container -p 3001:3001 ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
           docker ps | grep test_container
-
-          # Checks to validate the container
           sleep 20
           docker logs test_container
           curl http://localhost:3001
-
           docker stop test_container
           docker rm test_container
 
@@ -89,17 +84,10 @@ jobs:
         run: |
           DOCKERHUB_IMAGE=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
           GHCR_IMAGE=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.IMAGE_NAME }}
-
           echo "Pushing Docker image: $DOCKERHUB_IMAGE:${{ env.COMMIT_HASH }}"
-
-          # Push the Docker image with commit hash tag
           docker push $DOCKERHUB_IMAGE:${{ env.COMMIT_HASH }}
-
-          # Build and push with specified or default tag
           docker build -t $DOCKERHUB_IMAGE:${{ env.IMAGE_TAG }} .
           docker push $DOCKERHUB_IMAGE:${{ env.IMAGE_TAG }}
-
-          # Build and Push the Docker image to GitHub Container Registry
           docker build -t $GHCR_IMAGE:${{ env.COMMIT_HASH }} .
           docker push $GHCR_IMAGE:${{ env.COMMIT_HASH }}
 
@@ -120,10 +108,17 @@ jobs:
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
-          sudo ./aws/install --update  # Ajout de l'option --update pour mettre à jour l'installation existante
+          sudo ./aws/install --update
           curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/aws-iam-authenticator
           chmod +x ./aws-iam-authenticator
           sudo mv ./aws-iam-authenticator /usr/local/bin
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
 
       - name: Set Kubeconfig
         uses: azure/k8s-set-context@v3
@@ -157,10 +152,6 @@ jobs:
         run: |
           cat Kubernetes/development/*.yaml
 
-      # - name : Create MongoDB Secret
-      #   run: |
-      #     kubectl create secret generic mongodb-secret --from-literal=MONGO_USERNAME=${{ secrets.MONGO_USERNAME }} --from-literal=MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}
-
       - name: Deploy to Development Environment
         run: |
           kubectl apply -f Kubernetes/development/
@@ -184,9 +175,6 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-
-            # Stop and remove the existing container if it exists
             sudo docker stop NodeJs-Container || true
             sudo docker rm NodeJs-Container || true
-
             sudo docker run -d --name NodeJs-Container --restart always -p 3001:3001 ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
