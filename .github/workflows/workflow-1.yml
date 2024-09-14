@@ -116,26 +116,45 @@ jobs:
         with:
           version: "latest"
 
-      - name: Recreate client certificate
-        run: echo "${{ secrets.MINIKUBE_CLIENT_CRT }}" | base64 -d > /tmp/client.crt
-
-      - name: Recreate client key
-        run: echo "${{ secrets.MINIKUBE_CLIENT_KEY }}" | base64 -d > /tmp/client.key
-
-      - name: Recreate CA certificate
-        run: echo "${{ secrets.MINIKUBE_CA_CRT }}" | base64 -d > /tmp/ca.crt
-
       - name: Set Kubeconfig
-        run: |
-          kubectl config set-cluster minikube --server=https://192.168.49.2:8443 --certificate-authority=/tmp/ca.crt
-          kubectl config set-credentials minikube --client-certificate=/tmp/client.crt --client-key=/tmp/client.key
-          kubectl config set-context minikube --cluster=minikube --user=minikube
-          kubectl config use-context minikube
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Fetch Kubernetes Cluster Details
         run: |
           kubectl version
           kubectl get nodes
+
+      - name: Saving Ingress Controller Hostname as a GitHub Environment Variable
+        run: |
+          echo "INGRESS_HOSTNAME=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $GITHUB_ENV
+
+      - name: Replace Tokens in Kubernetes manifest
+        uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: "_{_"
+          tokenSuffix: "_}_"
+          files: "Kubernetes/development/*.yaml"
+        env:
+          NAMESPACE: ${{ vars.NAMESPACE }}
+          REPLICAS: ${{ vars.REPLICAS }}
+          IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
+          DEPLOY_ENV: development
+          INGRESS_HOSTNAME: ${{ env.INGRESS_HOSTNAME }}
+
+      - name: Check the Kubernetes manifest files
+        run: |
+          cat Kubernetes/development/*.yaml
+
+      # - name : Create MongoDB Secret
+      #   run: |
+      #     kubectl create secret generic mongodb-secret --from-literal=MONGO_USERNAME=${{ secrets.MONGO_USERNAME }} --from-literal=MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}
+
+      - name: Deploy to Development Environment
+        run: |
+          kubectl apply -f Kubernetes/development/
 
   deploy-on-EC2-instance:
     runs-on: ubuntu-latest
