@@ -106,11 +106,12 @@ jobs:
 
       - name: Install AWS CLI and AWS IAM Authenticator
         run: |
+          # Download AWS CLI v2
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
-          sudo ./aws/install --update 
+          sudo ./aws/install --update
 
-          # Download the right version of aws-iam-authenticator (x64)
+          # Download the correct version of aws-iam-authenticator
           curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/aws-iam-authenticator
           chmod +x ./aws-iam-authenticator
           sudo mv ./aws-iam-authenticator /usr/local/bin
@@ -121,6 +122,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-north-1
+
+      - name: Update kubeconfig using AWS CLI
+        run: |
+          aws eks update-kubeconfig --name test-cluster --region eu-north-1
 
       - name: Set Kubeconfig
         uses: azure/k8s-set-context@v3
