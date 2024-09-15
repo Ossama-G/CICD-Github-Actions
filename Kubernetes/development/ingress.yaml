@@ -6,7 +6,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
-
+    
 spec:
   rules:
     - host: myapp-_{_NAMESPACE_}_._{_INGRESS_HOSTNAME_}_.nip.io
