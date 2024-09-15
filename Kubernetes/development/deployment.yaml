@@ -17,28 +17,28 @@ spec:
         app: myapp
     spec:
       containers:
-        - name: myapp
-          image: _{_IMAGE_}_
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
-              name: http
-              protocol: TCP
-          env:
-            - name: COMMIT_HASH
-              value: ${{ github.sha }}
-            - name: IMAGE_NAME
-              value: myapp
-            - name: IMAGE_TAG
-              value: ${{ github.sha }}
-            - name: DEPLOY_ENV
-              value: _{_DEPLOY_ENV_}_
-            - name: GITHUB_TOKEN
-              value: ${{ secrets.GITHUB_TOKEN }}
-          resources:
-          requests:
-            memory: "256Mi"
-            cpu: "500m"
-          limits:
-            memory: "512Mi"
-            cpu: "1000m"
+  - name: myapp
+    image: _{_IMAGE_}_
+    imagePullPolicy: Always
+    ports:
+      - containerPort: 8080
+        name: http
+        protocol: TCP
+    env:
+      - name: COMMIT_HASH
+        value: ${{ github.sha }}
+      - name: IMAGE_NAME
+        value: myapp
+      - name: IMAGE_TAG
+        value: ${{ github.sha }}
+      - name: DEPLOY_ENV
+        value: _{_DEPLOY_ENV_}_
+      - name: GITHUB_TOKEN
+        value: ${{ secrets.GITHUB_TOKEN }}
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "500m"
+      limits:
+        memory: "512Mi"
+        cpu: "1000m"
