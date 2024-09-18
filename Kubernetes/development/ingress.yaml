@@ -9,7 +9,7 @@ metadata:
     
 spec:
   rules:
-    - host: myapp-_{_NAMESPACE_}_._{_INGRESS_HOSTNAME_}_.nip.io
+    - host: a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
       http:
         paths:
           - path: /
@@ -21,5 +21,5 @@ spec:
                   number: 8080
   tls:
     - hosts:
-        - myapp-_{_NAMESPACE_}_._{_INGRESS_HOSTNAME_}_.nip.io
+        - a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
       secretName: ingress-local-tls
