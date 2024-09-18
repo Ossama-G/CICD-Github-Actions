@@ -4,10 +4,12 @@ metadata:
   name: myapp
   namespace: _{_NAMESPACE_}_
   annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
-    service.beta.kubernetes.io/aws-load-balancer-type: nlb
-    
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    alb.ingress.kubernetes.io/scheme: internet-facing # ELB accessible publiquement
+    alb.ingress.kubernetes.io/target-type: ip
+
 spec:
   rules:
     - host: a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
@@ -19,8 +21,8 @@ spec:
               service:
                 name: myapp
                 port:
-                  number: 8080
-  tls:
-    - hosts:
-        - a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
-      secretName: ingress-local-tls
+                  number: 80
+  # tls:
+  #   - hosts:
+  #       - a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
+  #     secretName: ingress-local-tls
