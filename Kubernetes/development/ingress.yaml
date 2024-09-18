@@ -26,3 +26,4 @@ spec:
   #   - hosts:
   #       - a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
   #     secretName: ingress-local-tls
+  
