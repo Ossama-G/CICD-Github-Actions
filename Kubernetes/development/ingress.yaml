@@ -12,7 +12,7 @@ metadata:
 
 spec:
   rules:
-    - host: a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
+    - host: ada70c44bf99b497a8e0fe270d4c6983-141647580.eu-north-1.elb.amazonaws.com
       http:
         paths:
           - path: /
@@ -26,4 +26,4 @@ spec:
   #   - hosts:
   #       - a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
   #     secretName: ingress-local-tls
-  
+
