@@ -8,7 +8,7 @@ metadata:
     # kubernetes.io/tls-acme: "true"
     # service.beta.kubernetes.io/aws-load-balancer-type: nlb
     alb.ingress.kubernetes.io/scheme: internet-facing # ELB accessible publiquement
-    alb.ingress.kubernetes.io/target-type: ip 
+    alb.ingress.kubernetes.io/target-type: ip
 
 spec:
   rules:
@@ -20,10 +20,9 @@ spec:
             backend:
               service:
                 name: myapp
-                port: 
+                port:
                   number: 8080
-   tls:
-     - hosts:
-         - _{INGRESS_HOSTNAME}_
-       secretName: ingress-local-tls
-
+  tls:
+    - hosts:
+        - _{INGRESS_HOSTNAME}_
+      secretName: ingress-local-tls
