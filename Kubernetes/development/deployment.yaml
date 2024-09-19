@@ -25,7 +25,7 @@ spec:
               name: http
               protocol: TCP
           env:
-            - name: COMMIT_HASH
+            - name: COMMIT_HASH 
               value: ${{ github.sha }}
             - name: IMAGE_NAME
               value: myapp
