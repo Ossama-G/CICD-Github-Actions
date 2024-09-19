@@ -12,7 +12,7 @@ metadata:
 
 spec:
   rules:
-    - host: myapp.com
+    - host: myapp-_{_NAMESPACE_}_._{INGRESS_HOSTNAME}_.nip.io
       http:
         paths:
           - path: /
