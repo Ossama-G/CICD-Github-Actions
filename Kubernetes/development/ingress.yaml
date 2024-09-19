@@ -20,7 +20,7 @@ spec:
             backend:
               service:
                 name: myapp
-                port:
+                port: 
                   number: 8080
   # tls:
   #   - hosts:
