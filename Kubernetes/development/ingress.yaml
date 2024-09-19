@@ -12,7 +12,7 @@ metadata:
 
 spec:
   rules:
-    - host: myapp-_{_NAMESPACE_}_._{INGRESS_HOSTNAME}_.nip.io
+    - host: _{INGRESS_HOSTNAME}_
       http:
         paths:
           - path: /
@@ -22,8 +22,8 @@ spec:
                 name: myapp
                 port: 
                   number: 8080
-  # tls:
-  #   - hosts:
-  #       - a4546df27329c4dc5923b69fe459cc47-91b3ca18f5597e2f.elb.eu-north-1.amazonaws.com
-  #     secretName: ingress-local-tls
+   tls:
+     - hosts:
+         - _{INGRESS_HOSTNAME}_
+       secretName: ingress-local-tls
 
