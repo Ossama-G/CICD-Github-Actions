@@ -14,7 +14,7 @@ spec:
   rules:
     - host: ada70c44bf99b497a8e0fe270d4c6983-141647580.eu-north-1.elb.amazonaws.com
       http:
-        paths:
+        paths: 
           - path: /
             pathType: Prefix
             backend:
