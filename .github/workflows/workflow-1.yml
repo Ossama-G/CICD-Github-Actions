@@ -158,9 +158,9 @@ jobs:
           NAMESPACE: ${{ vars.NAMESPACE }}
           REPLICAS: ${{ vars.REPLICAS }}
           IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
-          DEPLOY_ENV: development 
-          INGRESS_HOSTNAME: $INGRESS_HOSTNAME
-        
+          DEPLOY_ENV: development
+          INGRESS_HOSTNAME: ${{ env.INGRESS_HOSTNAME }}
+
       - name: Check the Kubernetes manifest files
         run: |
           cat Kubernetes/development/*.yaml
