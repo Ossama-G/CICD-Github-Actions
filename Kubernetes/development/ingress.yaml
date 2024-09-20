@@ -22,7 +22,7 @@ spec:
                 name: myapp
                 port:
                   number: 8080
-  tls:
-    - hosts:
-      - ada70c44bf99b497a8e0fe270d4c6983-141647580.eu-north-1.elb.amazonaws.com
-      secretName: ingress-local-tls
+  # tls:
+  #   - hosts:
+  #     - ada70c44bf99b497a8e0fe270d4c6983-141647580.eu-north-1.elb.amazonaws.com
+  #     secretName: ingress-local-tls
