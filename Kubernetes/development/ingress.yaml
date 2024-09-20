@@ -12,7 +12,7 @@ metadata:
 
 spec:
   rules:
-    - host: myapp-_{_NAMESPACE_}_._{_INGRESS_HOSTNAME_}_.nip.io
+    - host: "${INGRESS_HOSTNAME}"
       http:
         paths:
           - path: /
@@ -24,5 +24,5 @@ spec:
                   number: 8080
   tls:
     - hosts:
-        - myapp-_{_NAMESPACE_}_._{_INGRESS_HOSTNAME_}_.nip.io
+        - "${INGRESS_HOSTNAME}"
       secretName: ingress-local-tls
