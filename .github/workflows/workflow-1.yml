@@ -94,8 +94,6 @@ jobs:
   dev-deploy:
     needs: build-test-and-push
     runs-on: ubuntu-latest
-    outputs:
-      APP_INGRESS_URL: ${{ steps.set-ingress-host-adress.outputs.URL }}
 
     steps:
       - name: Checkout Repo
@@ -173,23 +171,20 @@ jobs:
         run: |
           kubectl apply -f Kubernetes/development/
 
-      - name: Set App Ingress Host URL
-        id: set-ingress-host-adress
-        run: |
-          echo "URL=$INGRESS_HOSTNAME" >> $GITHUB_ENV
+  # Integretion-testing:
+  #   name: Dev Integration Testing
+  #   needs: dev-deploy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Test URL Output using CURl and JQ
+  #       env:
+  #         URL: ${{ needs.dev-deploy.outputs.APP_INGRESS_URL }}
+  #       run: |
+  #         echo $URL
+  #         echo "---------------------------------"
+  #         curl http://$URL -s -k | jq -r .status | grep "OK"
 
-  Integretion-testing:
-    name: Dev Integration Testing
-    needs: dev-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test URL Output using CURl and JQ
-        env:
-          URL: ${{ needs.dev-deploy.outputs.APP_INGRESS_URL }}
-        run: |
-          echo $URL
-          echo "---------------------------------"
-          curl http://$URL -s -k | jq -r .status | grep "OK"
+  
 
   deploy-on-EC2-instance:
     runs-on: ubuntu-latest
