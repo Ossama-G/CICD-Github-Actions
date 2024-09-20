@@ -24,5 +24,5 @@ spec:
                   number: 8080
   tls:
     - hosts:
-        - _{INGRESS_HOSTNAME}_
+        - myapp._{_NAMESPACE_}_._{_INGRESS_HOSTNAME_}_.nip.io
       secretName: ingress-local-tls
