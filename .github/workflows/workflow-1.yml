@@ -159,8 +159,11 @@ jobs:
           REPLICAS: ${{ vars.REPLICAS }}
           IMAGE: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_HASH }}
           DEPLOY_ENV: development
-          INGRESS_HOSTNAME: ${{ env.INGRESS_HOSTNAME }}
-
+          INGRESS_HOSTNAME: $INGRESS_HOSTNAME
+      
+      - name: Display Kubernetes manifest with substituted variables
+        run: cat path/to/your/generated-ingress.yaml
+        
       - name: Check the Kubernetes manifest files
         run: |
           cat Kubernetes/development/*.yaml
