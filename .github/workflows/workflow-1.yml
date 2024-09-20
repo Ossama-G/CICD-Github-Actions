@@ -144,6 +144,10 @@ jobs:
         run: |
           echo "INGRESS_HOSTNAME=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $GITHUB_ENV
 
+      - name: Verify Ingress Hostname
+        run: |
+          echo "The value of INGRESS_HOSTNAME is: $INGRESS_HOSTNAME"
+
       - name: Replace Tokens in Kubernetes manifest
         uses: cschleiden/replace-tokens@v1
         with:
